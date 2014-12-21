@@ -58,6 +58,8 @@ chatWS.broadcast = function broadcast(data) {
 chatServer.listen(chatPort);
 
 
+console.log('process.env');
+console.log(process.env);
 
 server.listen(shareJSPort);
 console.log('editor listening on http://localhost:' + shareJSPort + '/');
