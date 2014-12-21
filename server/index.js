@@ -57,7 +57,6 @@ chatWS.broadcast = function broadcast(data) {
 
 chatServer.listen(chatPort);
 
-
 console.log('process.env');
 console.log(process.env);
 
