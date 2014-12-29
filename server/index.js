@@ -1,3 +1,5 @@
+'use strict';
+
 //dependencies
 var bodyParser = require('body-parser'),
   path = require('path'),
@@ -39,7 +41,7 @@ var chatPort = 8001,
   chatServer = http.createServer(chatApp),
   chatWS = new WebSocketServer({
     server: chatServer
-  })
+  });
 
 chatWS.on('connection', function (ws) {
   ws.on('message', function (msg) {
@@ -56,9 +58,6 @@ chatWS.broadcast = function broadcast(data) {
 };
 
 chatServer.listen(chatPort);
-
-console.log('process.env');
-console.log(process.env);
 
 server.listen(shareJSPort);
 console.log('Editor listening on port:', shareJSPort);
