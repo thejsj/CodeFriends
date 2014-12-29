@@ -88,7 +88,6 @@ describe('API', function () {
             .expect(200)
             .end(function (err, res) {
               var project = res.body;
-              console.log('PROJECT !!!!!!!!!!!!!!!!!!!!!!!!!!!!!', project);
               project.should.have.property('id');
               project.should.have.property('project_name');
               project.project_name.should.equal(_project.project_name);
@@ -100,8 +99,6 @@ describe('API', function () {
             });
         });
     });
-
-
   });
 
   describe('User', function () {
@@ -201,11 +198,19 @@ describe('API', function () {
         });
     });
 
-
     // xit('should get all user info on GET /user/:github_handle', function () {
 
     // });
+  });
 
+  describe('File', function () {
+    it('should create a new file structure for a project with no file structure', function () {
+       request(app)
+          .post('/api/file')
+          .send({
+            project_name: 'basketball'
+          })
+    });
   });
 
 });
