@@ -19,10 +19,10 @@ var mongoIndex = function (str) {
 
 var fileController = {
   createNewFileOrFolder: function (req, res) {
-    var projectName = req.body.projectName || req.param('projectName');
-    var type = req.body.type || req.param('type');
-    var projectId = req.body.projectId || req.param('projectId') || null;
-    var filePath = req.body.filePath || req.param('filePath') || '';
+    var projectName = req.body.projectName || req.param.projectName;
+    var type = req.body.type || req.param.type;
+    var projectId = req.body.projectId || req.param.projectId || null;
+    var filePath = req.body.filePath || req.param.filePath || '';
     var fileInfo = {
       projectName: projectName,
       filePath: filePath,
@@ -92,8 +92,12 @@ var fileController = {
           newAddition.files = {};
         }
         return fileController._appendToFileStructure(fileStructure, filePath, newAddition);
+      })
+      .catch(function (err) {
+        console.log('Error creating new file or folder', err);
       });
   },
+
   /**
    * Updated fileStructure in Mongo Database
    *
@@ -118,7 +122,7 @@ var fileController = {
            return fileStructure;
          })
           .catch(function (err) {
-            console.log('Cannot Find Collection With ID', err);
+            throw new Error('Cannot Find Collection With ID ' + err.message);
           })
          .finally(function () {
            return conn.close();
@@ -256,7 +260,7 @@ var fileController = {
               });
           })
           .catch(function (error) {
-            console.log('Error Connecting to MongoDB', error);
+            throw new Error('Error Connecting to MongoDB ' + error.message);
           });
 
         //return mongoClient.connectAsync(config.get('mongo'))
@@ -321,7 +325,7 @@ var fileController = {
         fileContent = content;
       })
       .catch(function (err) {
-        console.log('Error moving the file: ', err);
+        throw new Error('Error moving the file: ' + err.message);
       })
       /**
        * get and save file structure
@@ -343,13 +347,13 @@ var fileController = {
         throw new Error('File Is Not Valid');
       })
       .catch(function (err) {
-        console.log('Error Moving Object Property', err);
+        throw new Error('Error Moving Object Property ' + err.message);
       })
       .then(function (newFileStructureToAdd) {
         return fileController._updateFileStructure(newFileStructureToAdd);
       })
       .catch(function (err) {
-        console.log('Error Updating File Structure', err);
+        throw new Error('Error Updating File Structure' + err.message);
       })
       /**
        * create a new file
@@ -365,9 +369,6 @@ var fileController = {
         };
         return fileController._createNewFileOrFolder(fileInfo);
       })
-      .catch(function (err) {
-        console.log('Error Creating New File', err);
-      })
       /**
        * write the file content saved at the beginning of 'moveFileInProject' with a new hash
        */
@@ -382,7 +383,7 @@ var fileController = {
             }
           })
           .catch(function (err) {
-            console.log('Document Already Exists', err);
+            throw new Error('Document Already Exists ' + err.message);
           });
       })
       .then(function () {
